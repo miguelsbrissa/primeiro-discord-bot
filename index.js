@@ -23,10 +23,10 @@ for (const file of commandsFiles) {
     const filePath = path.join(commandsPath, file)
     const command = require(filePath)
 
-    if ("data" in command && "execute" in command) {
+    if ("data" in command && ("execute" in command || "autocomplete" in command)) {
         client.commands.set(command.data.name, command)
     } else {
-        console.log(`Esse comando em ${filePath} está com data ou execute ausentes!`)
+        console.log(`Esse comando em ${filePath} está com data ou execute ou autocomplete ausentes!`)
     }
 }
 
@@ -37,8 +37,7 @@ client.once(Events.ClientReady, c => {
 });
 client.login(TOKEN);
 
-function sendDoc(lang){
-
+function sendDoc(lang) {
     if (lang == "javascript") {
         return "Documentação do Javascript: https://developer.mozilla.org/en-US/docs/Web/JavaScript"
     } else if (lang == "python") {
@@ -52,24 +51,36 @@ function sendDoc(lang){
 
 //listener de interações com o bot
 client.on(Events.InteractionCreate, async interaction => {
-    if (interaction.isStringSelectMenu()) {
+    if (interaction.isChatInputCommand()) {
+        const command = interaction.client.commands.get(interaction.commandName)
+        if (!command) {
+            console.error("Comando não encontrado")
+            return
+        }
+
+        try {
+            await command.execute(interaction)
+        } catch (error) {
+            console.error(error)
+            await interaction.reply("Houve um erro ao executar esse comando")
+        }
+    } else if (interaction.isAutocomplete()) {
+        const command = interaction.client.commands.get(interaction.commandName);
+        if (!command) {
+            console.error(`No command matching ${interaction.commandName} was found.`);
+            return;
+        }
+
+        try {
+            await command.autocomplete(interaction);
+        } catch (error) {
+            console.error(error);
+        }
+    } else if (interaction.isStringSelectMenu()) {
         const selected = interaction.values[0]
         await interaction.reply(sendDoc(selected))
-    }
 
-    if (!interaction.isChatInputCommand()) return
-
-    const command = interaction.client.commands.get(interaction.commandName)
-
-    if (!command) {
-        console.error("Comando não encontrado")
+    } else {
         return
-    }
-
-    try {
-        await command.execute(interaction)
-    } catch (error) {
-        console.error(error)
-        await interaction.reply("Houve um erro ao executar esse comando")
     }
 })
