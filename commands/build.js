@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { data } = require('../data/champions.json')
 
 function sendBuildByChamp(champion) {
     const buildEmbed = new EmbedBuilder()
@@ -33,13 +34,13 @@ module.exports = {
         .addStringOption(option =>
             option.setName('campeão')
                 .setRequired(true)
-                .setDescription('Campeão desejado')
+                .setDescription('Digite o nome do Campeão desejado')
                 .setAutocomplete(true)),
 
 
     async autocomplete(interaction) {
         const focusedValue = interaction.options.getFocused();
-        const choices = ['Lee sin', 'Lucian', 'Caitlynn', 'Zeri'];
+        const choices = data.map(champ => champ.name)
         const filtered = choices.filter(choice => choice.startsWith(focusedValue));
         await interaction.respond(
             filtered.map(choice => ({ name: choice, value: choice })),
