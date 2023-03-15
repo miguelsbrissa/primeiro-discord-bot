@@ -1,5 +1,27 @@
 {
-    "data":{
-        
-    }
+    "dataBuilds":[
+        {
+            "champion_name": "Lee Sin",
+            "skill_order": "E>W>Q",
+            "skill_max": "Q>W>E",
+            "initial_items": "Smite Blue",
+            "core_items": "Gore e Cutelo",
+            "ocasional_items": "Maumotiros/Danca/GA/Chempunk",
+            "boots": "Tabi",
+            "runes": "https://i.im.ge/2023/03/15/DsbL1C.conqueror.png",
+            "image": "https://i.im.ge/2023/03/15/DsM0jp.League-Infobox-Lee-Sin.jpg"
+        },
+
+        {
+            "champion_name": "Ezreal",
+            "skill_order": "E>W>Q",
+            "skill_max": "Q>W>E",
+            "initial_items": "Smite Blue",
+            "core_items": "Gore e Cutelo",
+            "ocasional_items": "Maumotiros/Danca/GA/Chempunk",
+            "boots": "Tabi",
+            "runes": "https://i.im.ge/2023/03/15/DsbL1C.conqueror.png",
+            "image": "https://i.im.ge/2023/03/15/DsM0jp.League-Infobox-Lee-Sin.jpg"
+        }
+    ]
 }

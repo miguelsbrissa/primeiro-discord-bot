@@ -1,27 +1,29 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { data } = require('../data/champions.json')
+const { dataChamps } = require('../data/champions.json')
+const { dataBuilds } = require('../data/builds.json')
 
 function sendBuildByChamp(champion) {
+    const champion_choosed = dataBuilds.filter(champ => champ.champion_name === champion)
     const buildEmbed = new EmbedBuilder()
         .setColor('Red')
-        .setTitle(`Build ${champion}`)
-        .setThumbnail('https://i.im.ge/2023/03/15/DsM0jp.League-Infobox-Lee-Sin.jpg')
+        .setTitle(`Build ${champion_choosed[0].champion_name}`)
+        .setThumbnail(champion_choosed[0].image)
         .addFields(
             { name: 'Skills', value: ' ' },
-            { name: 'Ordem para começar', value: 'E>W>Q', inline: true },
-            { name: 'Ordem para maximizar', value: 'Q>W>E', inline: true },
+            { name: 'Ordem para começar', value: champion_choosed[0].skill_order, inline: true },
+            { name: 'Ordem para maximizar', value: champion_choosed[0].skill_max, inline: true },
             { name: '\u200B', value: '\u200B' },
             { name: 'Itens', value: ' ' },
-            { name: 'Itens iniciais', value: 'Smite blue, Poção' },
-            { name: 'Botas', value: 'Tabi ou Mercuri' },
-            { name: 'Itens', value: 'Gore, Cutelo, Maumotiros/Danca/GA/Chempunk' },
+            { name: 'Itens iniciais', value: champion_choosed[0].initial_items},
+            { name: 'Botas', value: champion_choosed[0].boots},
+            { name: 'Itens', value: champion_choosed[0].core_items},
 
         )
         .addFields(
             { name: '\u200B', value: '\u200B' },
             { name: 'Runas', value: ' ' },
         )
-        .setImage('https://i.im.ge/2023/03/15/DsbL1C.conqueror.png')
+        .setImage(champion_choosed[0].runes)
         .setTimestamp()
 
     return buildEmbed
@@ -40,7 +42,7 @@ module.exports = {
 
     async autocomplete(interaction) {
         const focusedValue = interaction.options.getFocused();
-        const choices = data.map(champ => champ.name)
+        const choices = dataChamps.map(champ => champ.name)
         const filtered = choices.filter(choice => choice.startsWith(focusedValue));
         await interaction.respond(
             filtered.map(choice => ({ name: choice, value: choice })),
